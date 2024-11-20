@@ -32,9 +32,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef PROTOCOL_VERSION_FTE 
 # define FTE_PEXT_TRANS				0x00000008	// .alpha support
-//#define FTE_PEXT_ACCURATETIMINGS	0x00000040  // qqshka: not actually used in ezquake.
-//												// I added it to ezquake in hope that someone made some
-//												// rockets(enitities) smoothing code...
+# define FTE_PEXT_ACCURATETIMINGS	0x00000040  // qqshka: not actually used in ezquake.
+												// I added it to ezquake in hope that someone made some
+												// rockets(enitities) smoothing code...
 # define FTE_PEXT_HLBSP				0x00000200	// stops fte servers from complaining
 # define FTE_PEXT_MODELDBL			0x00001000  //
 # define FTE_PEXT_ENTITYDBL			0x00002000	// max of 1024 ents instead of 512
