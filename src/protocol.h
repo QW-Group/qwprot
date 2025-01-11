@@ -46,6 +46,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # define FTE_PEXT_CHUNKEDDOWNLOADS	0x20000000	// alternate file download method. Hopefully it'll give
 												// quadroupled download speed, especially on higher pings.
 # define FTE_PEXT_CSQC				0x40000000	//csqc additions
+# define FTE_PEXT_DPFLAGS			0x80000000	//extra flags for viewmodel/externalmodel and possible other persistant style flags.
 #endif // PROTOCOL_VERSION_FTE
 
 #ifdef PROTOCOL_VERSION_FTE2
@@ -399,10 +400,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # ifdef FTE_PEXT_COLOURMOD
 # define U_FTE_COLOURMOD (1<<10)		//rgb
 # endif // FTE_PEXT_COLOURMOD
+#ifdef FTE_PEXT_DPFLAGS
 # define U_FTE_DPFLAGS (1<<11)
+#endif // FTE_PEXT_DPFLAGS
+#ifdef FTE_PEXT_SETATTACHMENT
 # define U_FTE_TAGINFO (1<<12)
+#endif // FTE_PEXT_SETATTACHMENT
+#ifdef FTE_PEXT_DPFLAGS
 # define U_FTE_LIGHT (1<<13)
 # define U_FTE_EFFECTS16	(1<<14)
+#endif // FTE_PEXT_DPFLAGS
 # define U_FTE_FARMORE (1<<15)
 #endif // PROTOCOL_VERSION_FTE
 
