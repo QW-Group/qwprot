@@ -565,6 +565,7 @@ enum {
 	mvdhidden_usercmd_weapons_ss			= 0x0008,	// (same format as mvdhidden_usercmd_weapons)
 	mvdhidden_usercmd_weapon_instruction	= 0x0009,	// <byte: playernum> <byte: flags> <int: sequence#> <int: mode> <byte[10]: weaponlist>
 	mvdhidden_paused_duration				= 0x000A,	// <byte: msec> ... actual time elapsed, not gametime (can be used to keep stream running) ... expected to be QTV only
+	mvdhidden_demo_start_timestamp_ms		= 0x000B,	// <uint64: unix timestamp milliseconds at demo start>
 	mvdhidden_extended						= 0xFFFF	// doubt we'll ever get here: read next short...
 };
 
