@@ -3,22 +3,22 @@ name: compile check
 on: [push, pull_request]
 
 jobs:
-  ezquake:
+  unezquake:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
     - name: Checkout qwprot
       uses: actions/checkout@v4
-    - name: Checkout ezquake
+    - name: Checkout unezquake
       uses: actions/checkout@v4
       with:
-        repository: QW-Group/ezquake-source
-        path: ezquake
+        repository: dusty-qw/unezquake
+        path: unezquake
         submodules: recursive
-    - name: Update qwprot in ezquake
+    - name: Update qwprot in unezquake
       run: |
-        cp src/* ezquake/src/qwprot/src
-        shasum ezquake/src/qwprot/src/protocol.h > checksum
+        cp src/* unezquake/src/qwprot/src
+        shasum unezquake/src/qwprot/src/protocol.h > checksum
     - name: Install dependencies
       run: |
         sudo apt-get update -qq
@@ -26,7 +26,7 @@ jobs:
     - name: Run CMake
       uses: lukka/run-cmake@v10
       with:
-        cmakeListsTxtPath: '${{ github.workspace }}/ezquake/CMakeLists.txt'
+        cmakeListsTxtPath: '${{ github.workspace }}/unezquake/CMakeLists.txt'
         configurePreset: dynamic
         buildPreset: dynamic-debug
     - name: Verify that build didn't change protocol.h
@@ -41,7 +41,7 @@ jobs:
     - name: Checkout mvdsv
       uses: actions/checkout@v4
       with:
-        repository: QW-Group/mvdsv
+        repository: dusty-qw/mvdsv
         path: mvdsv
         submodules: recursive
     - name: Update qwprot in mvdsv
