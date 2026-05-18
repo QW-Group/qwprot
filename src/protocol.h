@@ -51,13 +51,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef PROTOCOL_VERSION_FTE2
 # ifdef WITH_SPEEX
-#  include <SDL_version.h>
 #  ifdef USE_SDL_VOICE
 #    undef USE_SDL_VOICE
 #  endif // USE_SDL_VOICE
-#  if SDL_VERSION_ATLEAST(2,0,5)
-#   define FTE_PEXT2_VOICECHAT			0x00000002
-#  endif // SDL_VERSION_ATLEAST(2,0,5)
+#  define FTE_PEXT2_VOICECHAT			0x00000002
 # endif // WITH_SPEEX
 #endif // PROTOCOL_VERSION_FTE2
 
@@ -410,16 +407,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # ifdef FTE_PEXT_COLOURMOD
 # define U_FTE_COLOURMOD (1<<10)		//rgb
 # endif // FTE_PEXT_COLOURMOD
-# ifdef FTE_PEXT_DPFLAGS
-#  define U_FTE_DPFLAGS (1<<11)
-# endif // FTE_PEXT_DPFLAGS
-# ifdef FTE_PEXT_SETATTACHMENT
-#  define U_FTE_TAGINFO (1<<12)
-# endif // FTE_PEXT_SETATTACHMENT
-# ifdef FTE_PEXT_DPFLAGS
-#  define U_FTE_LIGHT (1<<13)
-#  define U_FTE_EFFECTS16	(1<<14)
-# endif // FTE_PEXT_DPFLAGS
+#ifdef FTE_PEXT_DPFLAGS
+# define U_FTE_DPFLAGS (1<<11)
+#endif // FTE_PEXT_DPFLAGS
+#ifdef FTE_PEXT_SETATTACHMENT
+# define U_FTE_TAGINFO (1<<12)
+#endif // FTE_PEXT_SETATTACHMENT
+#ifdef FTE_PEXT_DPFLAGS
+# define U_FTE_LIGHT (1<<13)
+# define U_FTE_EFFECTS16	(1<<14)
+#endif // FTE_PEXT_DPFLAGS
 # define U_FTE_FARMORE (1<<15)
 #endif // PROTOCOL_VERSION_FTE
 
@@ -589,18 +586,19 @@ typedef struct temp_entity_list_s {
 // embedded in dem_multiple(0) - should be safely skipped in clients
 // format is <int:length> <short:type>*   where <type> is duplicated if 0xFFFF.  <length> is length of the data packet, not the header
 enum {
-	mvdhidden_antilag_position           = 0x0000,  // mvdhidden_antilag_position_header_t mvdhidden_antilag_position_t*
-	mvdhidden_usercmd                    = 0x0001,  // <byte: playernum> <byte:dropnum> <byte: msec, vec3_t: angles, short[3]: forward side up> <byte: buttons> <byte: impulse>
-	mvdhidden_usercmd_weapons            = 0x0002,  // <byte: source playernum> <int: items> <byte[4]: ammo> <byte: result> <byte*: weapon priority (nul terminated)>
-	mvdhidden_demoinfo                   = 0x0003,  // <short: block#> <byte[] content>
-	mvdhidden_commentary_track           = 0x0004,  // <byte: track#> [todo... <byte: audioformat> <string: short-name> <string: author(s)> <float: start-offset>?]
-	mvdhidden_commentary_data            = 0x0005,  // <byte: track#> [todo... format-specific]
-	mvdhidden_commentary_text_segment    = 0x0006,  // <byte: track#> [todo... <float: duration> <string: text (utf8)>]
-	mvdhidden_dmgdone                    = 0x0007,  // <byte: type-flags> <short: damaged ent#> <short: damaged ent#> <short: damage>
-	mvdhidden_usercmd_weapons_ss         = 0x0008,  // (same format as mvdhidden_usercmd_weapons)
-	mvdhidden_usercmd_weapon_instruction = 0x0009,  // <byte: playernum> <byte: flags> <int: sequence#> <int: mode> <byte[10]: weaponlist>
-	mvdhidden_paused_duration            = 0x000A,  // <byte: msec> ... actual time elapsed, not gametime (can be used to keep stream running) ... expected to be QTV only
-	mvdhidden_extended                   = 0xFFFF   // doubt we'll ever get here: read next short...
+	mvdhidden_antilag_position				= 0x0000,	// mvdhidden_antilag_position_header_t mvdhidden_antilag_position_t*
+	mvdhidden_usercmd						= 0x0001,	// <byte: playernum> <byte:dropnum> <byte: msec, vec3_t: angles, short[3]: forward side up> <byte: buttons> <byte: impulse>
+	mvdhidden_usercmd_weapons				= 0x0002,	// <byte: source playernum> <int: items> <byte[4]: ammo> <byte: result> <byte*: weapon priority (nul terminated)>
+	mvdhidden_demoinfo						= 0x0003,	// <short: block#> <byte[] content>
+	mvdhidden_commentary_track				= 0x0004,	// <byte: track#> [todo... <byte: audioformat> <string: short-name> <string: author(s)> <float: start-offset>?]
+	mvdhidden_commentary_data				= 0x0005,	// <byte: track#> [todo... format-specific]
+	mvdhidden_commentary_text_segment		= 0x0006,	// <byte: track#> [todo... <float: duration> <string: text (utf8)>]
+	mvdhidden_dmgdone						= 0x0007,	// <byte: type-flags> <short: damaged ent#> <short: damaged ent#> <short: damage>
+	mvdhidden_usercmd_weapons_ss			= 0x0008,	// (same format as mvdhidden_usercmd_weapons)
+	mvdhidden_usercmd_weapon_instruction	= 0x0009,	// <byte: playernum> <byte: flags> <int: sequence#> <int: mode> <byte[10]: weaponlist>
+	mvdhidden_paused_duration				= 0x000A,	// <byte: msec> ... actual time elapsed, not gametime (can be used to keep stream running) ... expected to be QTV only
+	mvdhidden_demo_start_timestamp_ms		= 0x000B,	// <uint64: unix timestamp milliseconds at demo start>
+	mvdhidden_extended						= 0xFFFF	// doubt we'll ever get here: read next short...
 };
 
 #define sizeof_mvdhidden_block_header_t_usercmd (1 + 1 + 1 + 3 * 4 + 3 * 2 + 1 + 1)
