@@ -67,6 +67,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # define MVD_PEXT1_HIDDEN_MESSAGES   (1 <<  5) // dem_multiple(0) packets are in format (<length> <type-id>+ <packet-data>)*
 //# define MVD_PEXT1_SERVERSIDEWEAPON2 (1 <<  6) // Server-side weapon selection supports clc_mvd_weapon_full_impulse.
 												 // Can be defined in a project Makefile
+// # define	MVD_PEXT1_WEAPONPREDICTION	(1 <<  7) // Weapon prediction
+// # define	MVD_PEXT1_SIMPLEPROJECTILE	(1 <<  8) // Simple projectiles
 
 # if defined(MVD_PEXT1_DEBUG_ANTILAG) || defined(MVD_PEXT1_DEBUG_WEAPON)
 #  define MVD_PEXT1_DEBUG
@@ -241,6 +243,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # define svc_fte_voicechat		84
 #endif // FTE_PEXT2_VOICECHAT
 
+#ifdef MVD_PEXT1_SIMPLEPROJECTILE
+# define	svc_packetsprojectiles		100		// [...]
+# define	svc_deltapacketsprojectiles	101		// [...]
+#endif // MVD_PEXT1_SIMPLEPROJECTILE
+
 //==============================================
 
 // client to server
@@ -252,6 +259,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	clc_delta		5		// [byte] sequence number, requests delta compression of message
 #define clc_tmove		6		// teleport request, spectator only
 #define clc_upload		7		// teleport request, spectator only
+
+#ifdef MVD_PEXT1_SIMPLEPROJECTILE
+# define clc_ackframe	50
+#endif // MVD_PEXT1_SIMPLEPROJECTILE
 
 #ifdef FTE_PEXT2_VOICECHAT
 #define clc_voicechat	83		// FTE voice chat.
@@ -488,6 +499,23 @@ typedef struct entity_state_s {
 #endif
 } entity_state_t;
 
+#ifdef MVD_PEXT1_SIMPLEPROJECTILE
+#define MAX_SIMPLEPROJECTILES	64
+typedef struct sprojectile_state_s {
+	int		number;			// edict index
+	int		flags;			// nolerp, etc
+	int		sflag;
+	int		owner;
+	int		fproj_num;
+	float	time_offset;
+	float	time;
+	vec3_t	origin;
+	vec3_t	angles;
+	int		modelindex;
+	vec3_t	velocity;
+} sprojectile_state_t;
+#endif // MVD_PEXT1_SIMPLEPROJECTILE
+
 #define	MAX_PACKET_ENTITIES			64	// doesn't include nails
 #define MAX_PEXT256_PACKET_ENTITIES 256	// up to 256 ents, look FTE_PEXT_256PACKETENTITIES
 #define	MAX_MVD_PACKET_ENTITIES		300	// !!! MUST not be less than any of above values!!!
@@ -505,6 +533,9 @@ typedef struct usercmd_s {
 	short	upmove;
 	byte	buttons;
 	byte	impulse;
+#ifdef MVD_PEXT1_WEAPONPREDICTION
+	byte	impulse_pred; // for antilag 1
+#endif
 } usercmd_t;
 
 //==============================================
