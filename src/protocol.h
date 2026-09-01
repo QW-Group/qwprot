@@ -236,9 +236,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define svc_fte_spawnbaseline2	66
 #ifdef FTE_PEXT_CSQC
 #define svc_fte_csqcentities	76
+#define svc_fte_cgamepacket		83	// ssqc->csqc game packets, only via multicast
+#define svc_fte_cgamepacket_sized	90	// svc_fte_cgamepacket with a short length prefix (sv_csqcdebug)
 #define svc_fte_csqcentities_sized	92	// as svc_fte_csqcentities, with a length prefix per update (sv_csqcdebug)
 #endif
-#define svc_qizmovoice			83
+#define svc_qizmovoice			85	// moved off 83 to free it for svc_fte_cgamepacket
 
 #ifdef FTE_PEXT2_VOICECHAT
 # define svc_fte_voicechat		84
@@ -264,6 +266,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef MVD_PEXT1_SIMPLEPROJECTILE
 # define clc_ackframe	50
 #endif // MVD_PEXT1_SIMPLEPROJECTILE
+
+#ifdef FTE_PEXT_CSQC
+#define clcfte_qcrequest	81	// CSQC sendevent (client -> server)
+#endif
 
 #ifdef FTE_PEXT2_VOICECHAT
 #define clc_voicechat	83		// FTE voice chat.
