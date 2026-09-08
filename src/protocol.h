@@ -240,7 +240,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define svc_fte_cgamepacket_sized	90	// svc_fte_cgamepacket with a short length prefix (sv_csqcdebug)
 #define svc_fte_csqcentities_sized	92	// as svc_fte_csqcentities, with a length prefix per update (sv_csqcdebug)
 #endif
-#define svc_qizmovoice			85	// moved off 83 to free it for svc_fte_cgamepacket
+#define svc_qizmovoice			83
 
 #ifdef FTE_PEXT2_VOICECHAT
 # define svc_fte_voicechat		84
