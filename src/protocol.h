@@ -236,6 +236,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define svc_fte_spawnbaseline2	66
 #ifdef FTE_PEXT_CSQC
 #define svc_fte_csqcentities	76
+#define svc_fte_updatestatstring	78	// [byte statnum] [string]
+#define svc_fte_updatestatfloat	79	// [byte statnum] [float]
 #define svc_fte_cgamepacket		83	// ssqc->csqc game packets, only via multicast
 #define svc_fte_cgamepacket_sized	90	// svc_fte_cgamepacket with a short length prefix (sv_csqcdebug)
 #define svc_fte_csqcentities_sized	92	// as svc_fte_csqcentities, with a length prefix per update (sv_csqcdebug)
