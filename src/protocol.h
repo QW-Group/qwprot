@@ -31,6 +31,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define PROTOCOL_VERSION_MVD1   (('M'<<0) + ('V'<<8) + ('D'<<16) + ('1' << 24)) //mvdsv extensions
 
 #ifdef PROTOCOL_VERSION_FTE 
+//# define FTE_PEXT_SCALE			0x00000002	// .scale support, not enabled by default,
+//												// define it from the build to use it.
 # define FTE_PEXT_TRANS				0x00000008	// .alpha support
 //#define FTE_PEXT_ACCURATETIMINGS	0x00000040  // qqshka: not actually used in ezquake.
 //												// I added it to ezquake in hope that someone made some
@@ -387,10 +389,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # define U_FTE_EVENMORE	(1<<7)		//extension info follows
 # ifdef FTE_PEXT_SCALE
 #  define U_FTE_SCALE		(1<<0)	//scaler of alias models
+#  define PF_SCALE		(1<<16)	//extra playerflags byte, scale*50 follows
 # endif // FTE_PEXT_SCALE
 # ifdef FTE_PEXT_TRANS
 #  define U_FTE_TRANS		(1<<1)	//transparency value
-#  define	PF_EXTRA_PFS	(1<<15)	//TRANS requires extra playerflags
+#  define	PF_EXTRA_PFS	(1<<15)	//TRANS/SCALE require extra playerflags
 #  define	PF_TRANS_Z		(1<<17)
 # endif // FTE_PEXT_TRANS
 # ifdef FTE_PEXT_FATNESS
@@ -500,6 +503,9 @@ typedef struct entity_state_s {
 	int		colormap;
 	int		skinnum;
 	int		effects;
+#ifdef FTE_PEXT_SCALE
+	byte		scale;		// 1/16 units, 0 = unset (unscaled)
+#endif
 #ifdef FTE_PEXT_TRANS
 	byte		trans;
 #endif
