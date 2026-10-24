@@ -37,7 +37,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#define FTE_PEXT_ACCURATETIMINGS	0x00000040  // qqshka: not actually used in ezquake.
 //												// I added it to ezquake in hope that someone made some
 //												// rockets(enitities) smoothing code...
-# define FTE_PEXT_SOUNDDBL			0x00000080	// extended sound indices and soundlist cursors
+# define FTE_PEXT_SOUNDDBL			0x00000080	// extended dynamic/static sound indices and soundlist cursors
 # define FTE_PEXT_HLBSP				0x00000200	// stops fte servers from complaining
 # define FTE_PEXT_MODELDBL			0x00001000  //
 # define FTE_PEXT_ENTITYDBL			0x00002000	// max of 1024 ents instead of 512
@@ -235,6 +235,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef FTE_PEXT_SOUNDDBL
 # define svc_fte_soundextended	55	// [byte flags] [optional volume/attenuation] [short entity/channel] [byte/short sound] [coords]
 # define svc_fte_soundlistshort	56	// [short cursor] [strings] [byte 0] [byte continuation]
+# define svc_fte_spawnstaticsound2 94	// [byte flags] [coord3] [byte/short sound] [byte volume] [byte attenuation]
 #endif // FTE_PEXT_SOUNDDBL
 #ifdef FTE_PEXT_MODELDBL
 # define	svc_fte_modellistshort	60	// [strings]
@@ -450,6 +451,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # define NQSND_VOLUME		(1 << 0)	// a byte
 # define NQSND_ATTENUATION	(1 << 1)	// a byte
 # define NQSND_LARGESOUND	(1 << 4)	// sound index is a short instead of a byte
+// svc_fte_spawnstaticsound2 flags; all other bits are reserved.
+# define STATIC_SOUND_LARGEINDEX (1 << 0) // unsigned short sound index instead of a byte
 #endif
 
 #define DEFAULT_SOUND_PACKET_VOLUME			255
