@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //												// rockets(enitities) smoothing code...
 # define FTE_PEXT_SOUNDDBL			0x00000080	// extended dynamic/static sound indices and soundlist cursors
 # define FTE_PEXT_HLBSP				0x00000200	// stops fte servers from complaining
+# define FTE_PEXT_TE_BULLET			0x00000400	// FTE QW temporary effects 14, 15 and 17-21
 # define FTE_PEXT_MODELDBL			0x00001000  //
 # define FTE_PEXT_ENTITYDBL			0x00002000	// max of 1024 ents instead of 512
 # define FTE_PEXT_ENTITYDBL2		0x00004000	// max of 1024 ents instead of 512
@@ -489,6 +490,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	TE_TELEPORT			11
 #define	TE_BLOOD			12
 #define	TE_LIGHTNINGBLOOD	13
+
+#ifdef FTE_PEXT_TE_BULLET
+// FTE QW effects; beam references follow the negotiated entity format.
+# define TE_BULLET				14	// position
+# define TEQW_SUPERBULLET		15	// position
+# define TEQW_RAILTRAIL			17	// start, end
+# define TEQW_BEAM				18	// entity, start, end
+# define TEQW_EXPLOSION2		19	// position, palette start byte, palette length byte
+# define TEQW_NQEXPLOSION		20	// position
+# define TEQW_NQGUNSHOT			21	// position, without a count byte
+#endif
 
 //==============================================
 
