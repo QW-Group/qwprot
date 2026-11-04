@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //												// rockets(enitities) smoothing code...
 # define FTE_PEXT_SOUNDDBL			0x00000080	// extended dynamic/static sound indices and soundlist cursors
 # define FTE_PEXT_HLBSP				0x00000200	// stops fte servers from complaining
+# define FTE_PEXT_TE_BULLET			0x00000400	// FTE QW temporary effects 14, 15 and 17-21
 # define FTE_PEXT_MODELDBL			0x00001000  //
 # define FTE_PEXT_ENTITYDBL			0x00002000	// max of 1024 ents instead of 512
 # define FTE_PEXT_ENTITYDBL2		0x00004000	// max of 1024 ents instead of 512
@@ -53,6 +54,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif // PROTOCOL_VERSION_FTE
 
 #ifdef PROTOCOL_VERSION_FTE2
+# define FTE_PEXT2_REPLACEMENTDELTAS	0x00000008	// FTE persistent entity/player deltas
 # ifdef WITH_SPEEX
 #  ifdef USE_SDL_VOICE
 #    undef USE_SDL_VOICE
@@ -256,6 +258,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # define svc_fte_voicechat		84
 #endif // FTE_PEXT2_VOICECHAT
 
+#ifdef FTE_PEXT2_REPLACEMENTDELTAS
+# define svc_fte_updateentities	86	// [float time] [RD entity records] [short 0]
+#endif
+
 #ifdef MVD_PEXT1_SIMPLEPROJECTILE
 # define	svc_packetsprojectiles		100		// [...]
 # define	svc_deltapacketsprojectiles	101		// [...]
@@ -450,6 +456,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef FTE_PEXT_SOUNDDBL
 # define NQSND_VOLUME		(1 << 0)	// a byte
 # define NQSND_ATTENUATION	(1 << 1)	// a byte
+# define NQSND_LARGEENTITY	(1 << 3)	// separate entity reference and channel byte
 # define NQSND_LARGESOUND	(1 << 4)	// sound index is a short instead of a byte
 // svc_fte_spawnstaticsound2 flags; all other bits are reserved.
 # define STATIC_SOUND_LARGEINDEX (1 << 0) // unsigned short sound index instead of a byte
@@ -484,6 +491,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	TE_BLOOD			12
 #define	TE_LIGHTNINGBLOOD	13
 
+#ifdef FTE_PEXT_TE_BULLET
+// FTE QW effects; beam references follow the negotiated entity format.
+# define TE_BULLET				14	// position
+# define TEQW_SUPERBULLET		15	// position
+# define TEQW_RAILTRAIL			17	// start, end
+# define TEQW_BEAM				18	// entity, start, end
+# define TEQW_EXPLOSION2		19	// position, palette start byte, palette length byte
+# define TEQW_NQEXPLOSION		20	// position
+# define TEQW_NQGUNSHOT			21	// position, without a count byte
+#endif
+
 //==============================================
 
 #define NQ_TE_EXPLOSION2	12
@@ -505,6 +523,118 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define	UPDATE_BACKUP	64	// copies of entity_state_t to keep buffered (must be power of two)
 #define	UPDATE_MASK		(UPDATE_BACKUP - 1)
+
+#ifdef FTE_PEXT2_REPLACEMENTDELTAS
+// FTE replacement deltas.
+// First byte contains the fields most likely to change constantly.
+#define UF_FRAME						(1u<<0)
+#define UF_ORIGINXY						(1u<<1)
+#define UF_ORIGINZ						(1u<<2)
+#define UF_ANGLESXZ						(1u<<3)
+#define UF_ANGLESY						(1u<<4)
+#define UF_EFFECTS						(1u<<5)
+#define UF_PREDINFO						(1u<<6)					/*base RD player data; does not require PEXT2_PREDINFO*/
+#define UF_EXTEND1						(1u<<7)
+
+/*stuff which is common on ent spawning*/
+#define UF_RESET						(1u<<8)					/*reset the entity state to its baseline*/
+#define UF_16BIT_LERPTIME				(1u<<9)					/*16-bit frame/skin/model; LERPTIME redefines this bit*/
+#define UF_MODEL						(1u<<10)
+#define UF_SKIN							(1u<<11)
+#define UF_COLORMAP						(1u<<12)
+#define UF_SOLID						(1u<<13)
+#define UF_FLAGS						(1u<<14)
+#define UF_EXTEND2						(1u<<15)
+
+/*Additional base RD fields; BONEDATA requires NEWSIZEENCODING.*/
+#define UF_ALPHA						(1u<<16)
+#define UF_SCALE						(1u<<17)
+#define UF_BONEDATA						(1u<<18)
+#define UF_DRAWFLAGS					(1u<<19)
+#define UF_TAGINFO						(1u<<20)
+#define UF_LIGHT						(1u<<21)
+#define UF_TRAILEFFECT					(1u<<22)
+#define UF_EXTEND3						(1u<<23)
+
+#define UF_COLORMOD						(1u<<24)
+#define UF_GLOW							(1u<<25)
+#define UF_FATNESS						(1u<<26)
+#define UF_MODELINDEX2					(1u<<27)
+#define UF_GRAVITYDIR					(1u<<28)
+#define UF_EFFECTS2_OLD					(1u<<29)				/*specified >8bit effects, replaced with variable length*/
+#define UF_UNUSED1						(1u<<30)
+#define UF_EXTEND4						(1u<<31)
+
+/*these flags are generally not deltaed as they're changing constantly*/
+#define UFP_FORWARD						(1u<<0)
+#define UFP_SIDE						(1u<<1)
+#define UFP_UP							(1u<<2)
+#define UFP_MOVETYPE					(1u<<3)					/*deltaed*/
+#define UFP_VELOCITYXY					(1u<<4)
+#define UFP_VELOCITYZ					(1u<<5)
+#define UFP_MSEC						(1u<<6)
+#define UFP_WEAPONFRAME_OLD				(1u<<7)					// weaponframe without PEXT2_PREDINFO
+#define UFP_VIEWANGLE					(1u<<7)
+
+/* Independent entity-reference and update/removal index encodings. */
+#define RD_ENTITYREF_EXTEND				0x8000
+#define RD_ENTITYREF_MASK				0x7fff
+#define RD_ENTITYREF_MAX				0x7fffff
+#define RD_ENTITYINDEX_REMOVE			0x8000
+#define RD_ENTITYINDEX_EXTEND			0x4000
+#define RD_ENTITYINDEX_MASK				0x3fff
+#define RD_ENTITYINDEX_MAX				0x3fffff
+
+/* Base prediction movement type and independent status bits. */
+#define RD_MOVETYPE_NONE				0
+#define RD_MOVETYPE_WALK				3
+#define RD_MOVETYPE_FLY					5
+#define RD_MOVETYPE_TOSS				6
+#define RD_MOVETYPE_NOCLIP				8
+#define RD_MOVETYPE_BOUNCE				10
+#define RD_MOVETYPE_LOCK				15						// MVDSV/ezQuake: server controls position and view angles.
+#define RD_MOVETYPE_MASK				63
+#define RD_MOVETYPE_JUMP_HELD			64
+#define RD_MOVETYPE_ONGROUND			128
+
+/* FTE render/solid values; ES_SOLID_BSP is not the engine's SOLID_BSP. */
+#define RENDER_STEP						1
+#define ES_SOLID_BSP					31
+
+/* Hexen2 lighting modes carried by UF_DRAWFLAGS. */
+#define MLS_MASK						7
+#define MLS_ADDLIGHT					6
+
+/* Hexen2 drawflags scaling origin, also used by the base RD null state. */
+#define SCALE_ORIGIN_BOTTOM				32
+#define SCALE_ORIGIN_TOP				64
+#define SCALE_ORIGIN_ORIGIN				(SCALE_ORIGIN_TOP | SCALE_ORIGIN_BOTTOM)	// 96
+
+/* Base replacement-delta state, independent of legacy snapshot arrays.
+ * Solid bounds retain their 16-bit wire encoding; no NEWSIZEENCODING. */
+typedef struct rd_entity_state_s {
+	int				number;									// Entity slot, zero reserved for the world/reset marker.
+	vec3_t			origin, angles;							// Position and model angles.
+	unsigned int	effects;								// Full 32-bit effect mask.
+	int				modelindex, modelindex2;				// Primary and optional secondary model IDs.
+	int				frame, skinnum, colormap;				// Model animation and appearance.
+	unsigned short	solidsize;								// Legacy FTE size16, 0 = non-solid, 31 = BSP.
+	short			movement[3], velocity[3];				// Base predinfo movement and velocity (velocity / 8).
+	unsigned short	weaponframe;							// Legacy predinfo weapon animation, up to 32767.
+	byte			pmovetype, msec;						// Prediction movement/ground flags and update age.
+	byte			dpflags, trans, scale;					// Render flags, opacity (255 opaque), scale (16 identity).
+	byte			colourmod[3];							// RGB multiplier, 32 identity.
+	byte			drawflags, abslight;					// Hexen2 appearance fields, parsed without HEXEN2 negotiation.
+	unsigned int	tagentity;								// Attachment parent entity reference.
+	byte			tagindex;								// Attachment tag; 255 is the special portal value.
+	unsigned short	light[4];								// Dynamic-light components.
+	byte			lightstyle, lightpflags;				// Dynamic-light style and flags.
+	unsigned short	traileffect, emiteffect;				// Optional particle effect IDs.
+	byte			glowsize, glowcolour, glowmod[3];		// Glow appearance, RGB identity 32.
+	signed char		fatness;								// Signed model expansion.
+	byte			gravitydir[2];							// Optional encoded gravity direction.
+} rd_entity_state_t;
+#endif // FTE_PEXT2_REPLACEMENTDELTAS
 
 // entity_state_t is the information conveyed from the server
 // in an update message
