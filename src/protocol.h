@@ -454,12 +454,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // svc_fte_soundextended uses a separate flags byte, not QW's packed flags.
 #ifdef FTE_PEXT_SOUNDDBL
-# define NQSND_VOLUME		(1 << 0)	// a byte
-# define NQSND_ATTENUATION	(1 << 1)	// a byte
-# define NQSND_LARGEENTITY	(1 << 3)	// separate entity reference and channel byte
-# define NQSND_LARGESOUND	(1 << 4)	// sound index is a short instead of a byte
+# define NQSND_VOLUME				(1 << 0)		// a byte
+# define NQSND_ATTENUATION			(1 << 1)		// a byte
+# define FTESND_MOREFLAGS			(1 << 2)		// FTE prefix-length integer of flags above bit 7
+# define NQSND_LARGEENTITY			(1 << 3)		// separate entity reference and channel byte
+# define NQSND_LARGESOUND			(1 << 4)		// sound index is a short instead of a byte
+// Additional FTE sound controls used with replacement deltas in QW.
+# define FTESND_TIMEOFS				(1 << 6)		// signed short, milliseconds
+# define FTESND_PITCHADJ			(1 << 7)		// byte, speed percent
+# define FTESND_VELOCITY			(1 << 8)		// three shorts, velocity * 8
+# define FTESND_FORCELOOP			(1 << 9)		// force looping
+# define FTESND_NOSPACIALISE		(1 << 10)		// disable stereo positioning
+# define FTESND_NOREVERB			(1 << 13)		// disable reverb
+# define FTESND_FOLLOW				(1 << 14)		// follow the owning entity
+# define FTESND_NOREPLACE			(1 << 15)		// keep an already playing entity channel
 // svc_fte_spawnstaticsound2 flags; all other bits are reserved.
-# define STATIC_SOUND_LARGEINDEX (1 << 0) // unsigned short sound index instead of a byte
+# define STATIC_SOUND_LARGEINDEX	(1 << 0)		// unsigned short sound index instead of a byte
 #endif
 
 #define DEFAULT_SOUND_PACKET_VOLUME			255
@@ -576,14 +586,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define UFP_WEAPONFRAME_OLD				(1u<<7)					// weaponframe without PEXT2_PREDINFO
 #define UFP_VIEWANGLE					(1u<<7)
 
-/* Independent entity-reference and update/removal index encodings. */
+/* Entity references: 15-bit ID, or 15 high bits followed by a low byte. */
 #define RD_ENTITYREF_EXTEND				0x8000
 #define RD_ENTITYREF_MASK				0x7fff
 #define RD_ENTITYREF_MAX				0x7fffff
+
+/* Update/removal indices: 14 low ID bits, optional high byte, and a remove flag. */
 #define RD_ENTITYINDEX_REMOVE			0x8000
 #define RD_ENTITYINDEX_EXTEND			0x4000
 #define RD_ENTITYINDEX_MASK				0x3fff
 #define RD_ENTITYINDEX_MAX				0x3fffff
+
+/* UF_TRAILEFFECT: 14-bit effect IDs. EMIT adds a second ID; bit 14 is unused. */
+#define RD_TRAILEFFECT_EMIT				0x8000
+#define RD_TRAILEFFECT_MASK				0x3fff
 
 /* Base prediction movement type and independent status bits. */
 #define RD_MOVETYPE_NONE				0
