@@ -512,6 +512,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # define TEQW_NQGUNSHOT			21	// position, without a count byte
 #endif
 
+// DarkPlaces effects, which FTE servers send without negotiation.
+#define	TEDP_BLOOD				50	// position, velocity chars, count byte
+#define	TEDP_SPARK				51	// position, velocity chars, count byte
+#define	TEDP_BLOODSHOWER		52	// mins, maxs, speed coord, count short
+#define	TEDP_EXPLOSIONRGB		53	// position, color bytes
+#define	TEDP_PARTICLECUBE		54	// mins, maxs, velocity, count short, color byte, gravity byte, jitter coord
+#define	TEDP_PARTICLERAIN		55	// mins, maxs, velocity, count short, color byte
+#define	TEDP_PARTICLESNOW		56	// mins, maxs, velocity, count short, color byte
+#define	TEDP_GUNSHOTQUAD		57	// position
+#define	TEDP_SPIKEQUAD			58	// position
+#define	TEDP_SUPERSPIKEQUAD		59	// position
+#define	TEDP_EXPLOSIONQUAD		70	// position
+#define	TEDP_SMALLFLASH			72	// position
+#define	TEDP_CUSTOMFLASH		73	// position, radius byte, lifetime byte, color bytes
+#define	TEDP_FLAMEJET			74	// position, velocity, count byte
+#define	TEDP_PLASMABURN			75	// position
+#define	TEDP_TEI_G3				76	// start, end, angles
+#define	TEDP_SMOKE				77	// position, direction, count byte
+#define	TEDP_TEI_BIGEXPLOSION	78	// position
+#define	TEDP_TEI_PLASMAHIT		79	// position, direction, count byte
+
 //==============================================
 
 #define NQ_TE_EXPLOSION2	12
