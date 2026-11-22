@@ -244,6 +244,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif // FTE_PEXT_MODELDBL
 
 #define svc_fte_spawnbaseline2	66
+
+// FTE servers send these to QuakeWorld clients without negotiation.
+#define svc_fte_effect			74	// [coord3] org [byte] modelindex [byte] startframe [byte] framecount [byte] framerate
+#define svc_fte_effect2			75	// [coord3] org [short] modelindex [short] startframe [byte] framecount [byte] framerate
+#define svc_fte_precache		77	// [short] index | FTEPC_* type [string] name, a late precache
+#define svc_fte_trailparticles	80	// [short] entity [short] effect [coord3] start [coord3] end
+#define svc_fte_pointparticles	81	// [short] effect [coord3] org [coord3] velocity [short] count
+#define svc_fte_pointparticles1	82	// [short] effect [coord3] org, with no velocity and a count of 1
+#define svc_fte_temp_entity_sized	91	// svc_temp_entity with a short length prefix (sv_csqcdebug)
+
+// svc_fte_precache index types; the low 14 bits are the index.
+#define FTEPC_TYPE				0xc000
+#define FTEPC_MODEL				0x0000
+#define FTEPC_SOUND				0x8000
+#define FTEPC_PARTICLE			0x4000
+#define FTEPC_UNUSED			0xc000
+
 #ifdef FTE_PEXT_CSQC
 #define svc_fte_csqcentities	76
 #define svc_fte_updatestatstring	78	// [byte statnum] [string]
