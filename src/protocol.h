@@ -34,9 +34,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //# define FTE_PEXT_SCALE			0x00000002	// .scale support, not enabled by default,
 //												// define it from the build to use it.
 # define FTE_PEXT_TRANS				0x00000008	// .alpha support
-//#define FTE_PEXT_ACCURATETIMINGS	0x00000040  // qqshka: not actually used in ezquake.
-//												// I added it to ezquake in hope that someone made some
-//												// rockets(enitities) smoothing code...
+# define FTE_PEXT_ACCURATETIMINGS	0x00000040	// svc_updatestatlong STAT_TIME (msecs) every server frame,
+												// not just every few seconds as with Z_EXT_SERVERTIME
 # define FTE_PEXT_SOUNDDBL			0x00000080	// extended dynamic/static sound indices and soundlist cursors
 # define FTE_PEXT_HLBSP				0x00000200	// stops fte servers from complaining
 # define FTE_PEXT_TE_BULLET			0x00000400	// FTE QW temporary effects 14, 15 and 17-21
